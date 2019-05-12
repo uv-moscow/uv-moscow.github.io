@@ -106,9 +106,7 @@
                 <p><input id="datetimepicker" type="text"></p>
 
                 <p>Параметр:</p>
-                <div id="custom-layer-control">
-                    
-                </div>
+                <div id="custom-layer-control"></div>
             </div>
         </div>
     </div>
@@ -116,9 +114,58 @@
     <div id="map" class="sidebar-map"></div>
 
     <script>
-        function getCurrentDate() {
-            var date;
+        function addZ(n) { return (n < 10) ? ('0' + n) : ('' + n); }
 
+        function getYesterdayDate() {
+            var date = new Date();
+            if (date.getHours() < 10) {
+                date.setDate(date.getDate() - 2);
+            } else {
+                date.setDate(date.getDate() - 1);
+            }
+
+            date.setHours(12);
+            date.setMinutes(0);
+            return date;
+        }
+
+        Date.prototype.yyyymmdd = function() {
+            var mm = this.getMonth() + 1; // getMonth() is zero-based
+            var dd = this.getDate();
+
+            var HH = this.getHours();
+            var MM = this.getMinutes();
+            var SS = this.getSeconds();
+
+            return [this.getFullYear(),
+                    '-',
+                    (mm>9 ? '' : '0') + mm,
+                    '-',
+                    (dd>9 ? '' : '0') + dd,
+                    'T',
+                    (HH>9 ? '' : '0') + HH,
+                    ':',
+                    (MM>9 ? '' : '0') + MM,
+                    ':',
+                    (SS>9 ? '' : '0') + SS,
+                    '.000Z'
+                    ].join('');
+        };
+
+        function getYesterdayDateWMS() {
+            var date = new Date();
+            if (date.getHours() < 10) {
+                date.setDate(date.getDate() - 2);
+            } else {
+                date.setDate(date.getDate() - 1);
+            }
+
+            date.setHours(12);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            
+            datestr = date.yyyymmdd();
+            return datestr;
         }
 
         // 2013-03-10T00:00:00.000
@@ -126,16 +173,18 @@
             format: 'Y-m-d\\TH:00:00.000\\Z',
             lang: 'ru',
             minDate: '2019/05/01',
+            maxDate: getYesterdayDate(),
+            startDate: getYesterdayDate(),
             mask: true,
             inline: true,
-            dayOfWeekStart: 1,
-            allowTimes:[
+            dayOfWeekStart: 1
+            /*allowTimes:[
                 '06:00', '07:00', '08:00', '09:00', 
                 '10:00', '11:00', '12:00', '13:00', 
                 '14:00', '15:00', '16:00', '17:00', 
                 '18:00', '19:00', '20:00', '21:00',
                 '22:00', '23:00'
-            ]
+            ]*/
         });
         jQuery.datetimepicker.setLocale('ru');
 
@@ -155,7 +204,8 @@
             format: 'image/png',
             transparent: 'true',
             opacity: 0.7,
-            attribution: 'uv-moscow.com'
+            attribution: 'uv-moscow.com',
+            time: getYesterdayDateWMS()
         });
 
         var uvi_res_layer = L.tileLayer.wms('http://18.196.89.4:8080/geoserver/uv-moscow/wms?', {
@@ -164,7 +214,8 @@
             format: 'image/png',
             transparent: 'true',
             opacity: 0.7,
-            attribution: 'uv-moscow.com'
+            attribution: 'uv-moscow.com',
+            time: getYesterdayDateWMS()
         });
 
         var qer_layer = L.tileLayer.wms('http://18.196.89.4:8080/geoserver/uv-moscow/wms?', {
@@ -173,7 +224,8 @@
             format: 'image/png',
             transparent: 'true',
             opacity: 0.7,
-            attribution: 'uv-moscow.com'
+            attribution: 'uv-moscow.com',
+            time: getYesterdayDateWMS()
         });
 
         var map = L.map('map');
@@ -217,7 +269,6 @@
         jQuery('#datetimepicker').datetimepicker({
             onChangeDateTime: function(dp,$input){
                 var selectedDate = $input.val();
-                alert(selectedDate)
                 uvi_layer.setParams({ 'time': selectedDate }, false);
                 uvi_res_layer.setParams({ 'time': selectedDate }, false);
                 qer_layer.setParams({ 'time': selectedDate }, false);
@@ -236,7 +287,7 @@
         }
         setParent(htmlObject, a);
 
-        /*
+
         function getColor(d) {
             return d > 6 ? '#d53e4f' :
                 d > 5  ? '#fc8d59' :
@@ -264,7 +315,7 @@
         };
 
         legend.addTo(map);
-        */
+
 
     </script>
 </body>
