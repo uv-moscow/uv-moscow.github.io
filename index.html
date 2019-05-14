@@ -198,7 +198,7 @@
             attribution: '© <a href="https://www.mapbox.com/">Mapbox</a>'
         });
 
-        var uvi_layer = L.tileLayer.wms('http://18.196.89.4:8080/geoserver/uv-moscow/wms?', {
+        var uvi_layer = L.tileLayer.wms('http://18.194.35.104:8080/geoserver/uv-moscow/wms?', {
             layers: 'uvindex-datastore, uv-moscow:uvindex-datastore',
             version: '1.1.1',
             format: 'image/png',
@@ -208,7 +208,7 @@
             time: getYesterdayDateWMS()
         });
 
-        var uvi_res_layer = L.tileLayer.wms('http://18.196.89.4:8080/geoserver/uv-moscow/wms?', {
+        var uvi_res_layer = L.tileLayer.wms('http://18.194.35.104:8080/geoserver/uv-moscow/wms?', {
             layers: 'uvres-datastore, uv-moscow:uvres-datastore',
             version: '1.1.1',
             format: 'image/png',
@@ -218,7 +218,7 @@
             time: getYesterdayDateWMS()
         });
 
-        var qer_layer = L.tileLayer.wms('http://18.196.89.4:8080/geoserver/uv-moscow/wms?', {
+        var qer_layer = L.tileLayer.wms('http://18.194.35.104:8080/geoserver/uv-moscow/wms?', {
             layers: 'qer-datastore, uv-moscow:qer-datastore',
             version: '1.1.1',
             format: 'image/png',
