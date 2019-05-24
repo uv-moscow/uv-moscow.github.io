@@ -1,0 +1,29 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body,
+#map {
+    height: 100%;
+    font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.lorem {
+    font-style: italic;
+    color: #AAA;
+}
+
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}

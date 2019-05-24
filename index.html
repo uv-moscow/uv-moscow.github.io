@@ -1,464 +1,99 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <title>Мониторинг УФ-радиации на территории Московского региона</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Мониторинг УФ-радиации на территории Московского региона</title>
 
-    <!-- font-awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <!-- Font-awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+            integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-    <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-        crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-        crossorigin=""></script>
+        <!-- Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+            integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+            crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+            crossorigin=""></script>
 
-    <!-- Leaflet-sidebar plugin @ https://github.com/Turbo87/sidebar-v2 -->
-    <link rel="stylesheet" href="./css/leaflet-sidebar.css" />
-    <script src="./js/leaflet-sidebar.js"></script>
+        <!-- Leaflet sidebar plugin - https://github.com/Turbo87/sidebar-v2 -->
+        <link rel="stylesheet" href="./css/leaflet-sidebar.min.css" />
+        <script src="./js/leaflet-sidebar.min.js"></script>
 
-    <!-- Leaflet.wms.js -->
-    <script src="./js/leaflet.wms.js"></script>
+        <!-- JQuery -->
+        <script src="./js/jquery.js"></script>
 
-    <!-- Datetimepicker -->
-    <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css"/ >
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery.datetimepicker.full.min.js"></script>
+        <!-- Datetimepicker - https://plugins.jquery.com/datetimepicker -->
+        <link rel="stylesheet" type="text/css" href="./css/jquery.datetimepicker.css" />
+        <script src="./js/jquery.datetimepicker.full.min.js"></script>
 
-    <!---<script src="js/L.TileLayer.BetterWMS.js"></script>-->
+        <!-- Chartist -->
+        <link rel="stylesheet" href="./css/chartist.min.css" />
+        <script src="./js/chartist.min.js"></script>
 
-    <link rel="stylesheet" href="css/chartist.min.css">
-    <script src="js/chartist.min.js"></script>
+        <!-- Leaflet BetterWMS -->
+        <script src="./js/L.TileLayer.BetterWMS.js"></script>
 
-    <style>
-        body {
-            padding: 0;
-            margin: 0;
-        }
+        <!-- uv-moscow css -->
+        <link rel="stylesheet" href="./css/uv-moscow.css" />
+        <script src="./js/uv-moscow.js"></script>
+    </head>
 
-        html,
-        body,
-        #map {
-            height: 100%;
-            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
-        }
-
-        .lorem {
-            font-style: italic;
-            color: #AAA;
-        }
-
-        .legend {
-            line-height: 18px;
-            color: #555;
-        }
-
-        .legend i {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-            opacity: 0.7;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="sidebar" class="sidebar collapsed">
-        <!-- Nav tabs -->
-        <div class="sidebar-tabs">
-            <ul role="tablist">
-                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-            </ul>
-        </div>
-
-        <!-- Tab panes -->
-        <div class="sidebar-content">
-            <div class="sidebar-pane" id="home">
-                <h1 class="sidebar-header">
-                    uv-moscow.com
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-
-                <p align="justify"><b>Мониторинг биологически активной ультрафиолетовой радиации на территории Москвы и Московской области в режиме, близком к реальному времени.</b></p>
-
-                <p align="justify">Ресурс предоставляет информацию об УФ-индексах, часовых дозах эритемной УФ радиации (выбранный час - середина часового интервала), полученные путем численного моделирования с учетом наблюдаемых в заданный день значений общего содержания озона (по данным спутникового радиометра OMI, Aura), действительного ослабления радиации облачностью, рассчитанного по данным геостационарного спутника METEOSAT (SEVERI), с учетом отражательных свойств поверхности.
-                
-                Подробнее об  УФ-индексе - на сайте <a href="https://www.who.int/uv/intersunprogramme/activities/uv_index/ru/">Всемирной организации здравоохранения</a>.
-                
-                <p align="justify">УФ-ресурсы имеют следующие градации:
-                
-                <ul>
-                    <li>0 - УФ-недостаточность (невозможно естественное образование витамина D);</li>
-                    <li>1 - УФ-оптимум (витамин D образуется, но не возникает эритема (первичное покраснение кожи человека);</li>
-                    <li>2 - УФ-избыточность средней степени;</li>
-                    <li>3 - УФ-избыточность высокой степени;</li>
-                    <li>4 - УФ-избыточность очень высокой степени.</li>
+    <body>
+        <!-- Sidebar panel -->
+        <div id="sidebar" class="sidebar collapsed">
+            <!-- Nav tabs -->
+            <div class="sidebar-tabs">
+                <ul role="tablist">
+                    <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
                 </ul>
-                </p>
-                <p align="justify">При значениях УФ-ресурсов от 2 и выше человеку необходима дополнительная защита от Солнца.</p>
-                <p align="justify">Расчеты выполняются для человека со вторым типом кожи <a href="https://ru.wikipedia.org/wiki/%D0%A8%D0%BA%D0%B0%D0%BB%D0%B0_%D0%A4%D0%B8%D1%82%D1%86%D0%BF%D0%B0%D1%82%D1%80%D0%B8%D0%BA%D0%B0">по Фитцпатрику</a>, при условии, что у него открыты голова и  кисти рук.</p>
-                <p align="justify">В экспериментальном режиме реализована схема учета ослабления УФ-радиации в городе Москва за счет затенения зданиями.</p>
-                <hr>
+            </div>
 
-                <!-- Datetime control -->
-                <p><input id="datetimepicker" type="text"></p>
+            <!-- Tab panes -->
+            <div class="sidebar-content">
+                <div class="sidebar-pane" id="home">
+                    <h1 class="sidebar-header">
+                        uv-moscow.com
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
 
-                <p>Параметр:</p>
-                <div id="custom-layer-control"></div>
+                    <p align="justify"><b>Мониторинг биологически активной ультрафиолетовой радиации на территории Москвы и Московской области в режиме, близком к реальному времени</b></p>
+                    <p align="justify">Ресурс предоставляет информацию об УФ-индексах, часовых дозах эритемной УФ-радиации (выбранный час - середина часового интервала), полученные путем численного моделирования с учетом наблюдаемых в заданный день значений общего содержания озона, действительного ослабления радиации облачностью и отражательных свойств поверхности.</p>
+                    <p align="justify">Содержание озона рассчитано по данным спутникового радиометра OMI (Aura, NASA). Облачность - по данным сенсора SEVERI (Meteosat, EUMETSAT).</p>
+                    
+                    <p align="justify">Подробнее об УФ-индексе - <a href="https://www.who.int/uv/intersunprogramme/activities/uv_index/ru/" target="_blank">на сайте Всемирной организации здравоохранения (ВОЗ)</a>.</p>
 
-                <br><br><br><br><br>
-                <div class="ct-chart ct-perfect-fourth"></div>
+                    <p align="justify">УФ-ресурсы имеют следующие градации:
+                    <ul>
+                        <li>0 - УФ-недостаточность (невозможно естественное образование витамина D);</li>
+                        <li>1 - УФ-оптимум (витамин D образуется, но не возникает эритема (первичное покраснение кожи человека);</li>
+                        <li>2 - УФ-избыточность средней степени;</li>
+                        <li>3 - УФ-избыточность высокой степени;</li>
+                        <li>4 и выше - УФ-избыточность очень высокой степени.</li>
+                    </ul>
+                    </p>
+                    
+                    <p align="justify">При значениях УФ-ресурсов от 2 и выше человеку необходима дополнительная защита от Солнца.</p>
+                    <p align="justify">Расчеты выполняются для человека со вторым типом кожи <a href="https://ru.wikipedia.org/wiki/%D0%A8%D0%BA%D0%B0%D0%BB%D0%B0_%D0%A4%D0%B8%D1%82%D1%86%D0%BF%D0%B0%D1%82%D1%80%D0%B8%D0%BA%D0%B0">по Фитцпатрику</a>, при условии, что у него открыты голова и  кисти рук.</p>
+                    <p align="justify">В экспериментальном режиме реализована схема учета ослабления УФ-радиации в городе Москва за счет затенения зданиями.</p>
+                    
+                    <hr>
+                    
+                    <!-- Control panel -->
+                    <p><input id="datetimepicker" type="text"></p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="map" class="sidebar-map"></div>
+        <div id="map" class="sidebar-map"></div>
 
-    <script>
-        function addZ(n) { return (n < 10) ? ('0' + n) : ('' + n); }
-
-        function getYesterdayDate() {
-            var date = new Date();
-            if (date.getHours() < 10) {
-                date.setDate(date.getDate() - 3);
-            } else {
-                date.setDate(date.getDate() - 2);
-            }
-
-            date.setHours(12);
-            date.setMinutes(0);
-            return date;
-        }
-
-        Date.prototype.yyyymmdd = function() {
-            var mm = this.getMonth() + 1; // getMonth() is zero-based
-            var dd = this.getDate();
-
-            var HH = this.getHours();
-            var MM = this.getMinutes();
-            var SS = this.getSeconds();
-
-            return [this.getFullYear(),
-                    '-',
-                    (mm>9 ? '' : '0') + mm,
-                    '-',
-                    (dd>9 ? '' : '0') + dd,
-                    'T',
-                    (HH>9 ? '' : '0') + HH,
-                    ':',
-                    (MM>9 ? '' : '0') + MM,
-                    ':',
-                    (SS>9 ? '' : '0') + SS,
-                    '.000Z'
-                    ].join('');
-        };
-
-        function getYesterdayDateWMS() {
-            var date = new Date();
-            if (date.getHours() < 10) {
-                date.setDate(date.getDate() - 3);
-            } else {
-                date.setDate(date.getDate() - 2);
-            }
-
-            date.setHours(12);
-            date.setMinutes(0);
-            date.setSeconds(0);
-            
-            datestr = date.yyyymmdd();
-            return datestr;
-        }
-
-        // 2013-03-10T00:00:00.000
-        jQuery('#datetimepicker').datetimepicker({
-            format: 'Y-m-d\\TH:00:00.000\\Z',
-            lang: 'ru',
-            minDate: '2019/05/01',
-            maxDate: getYesterdayDate(),
-            startDate: getYesterdayDate(),
-            mask: true,
-            inline: true,
-            dayOfWeekStart: 1
-            /*allowTimes:[
-                '06:00', '07:00', '08:00', '09:00', 
-                '10:00', '11:00', '12:00', '13:00', 
-                '14:00', '15:00', '16:00', '17:00', 
-                '18:00', '19:00', '20:00', '21:00',
-                '22:00', '23:00'
-            ]*/
-        });
-        jQuery.datetimepicker.setLocale('ru');
-
-        ////////////////////////////////////////////////////////////////////////////
-        L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
-        
-        onAdd: function (map) {
-            // Triggered when the layer is added to a map.
-            //   Register a click listener, then do all the upstream WMS things
-            L.TileLayer.WMS.prototype.onAdd.call(this, map);
-            //map.on('click', this.getFeatureInfo, this);
-            map.on('click', this.getFeatureInfoWholeDay, this);
-        },
-        
-        onRemove: function (map) {
-            // Triggered when the layer is removed from a map.
-            //   Unregister a click listener, then do all the upstream WMS things
-            L.TileLayer.WMS.prototype.onRemove.call(this, map);
-            map.off('click', this.getFeatureInfo, this);
-        },
-        
-        getFeatureInfo: function (evt) {
-            // Make an AJAX request to the server and hope for the best
-            var date_js = $('#datetimepicker').datetimepicker('getValue');
-            date_js.setSeconds(0);
-            date_str = date_js.yyyymmdd();
-
-            var url = this.getFeatureInfoUrl(evt.latlng, date_str),
-                showResults = L.Util.bind(this.showGetFeatureInfo, this);
-
-            $.ajax({
-            url: url,
-            success: function (data, status, xhr) {
-                var err = typeof data === 'string' ? null : data;
-                showResults(err, evt.latlng, data);
-            },
-            error: function (xhr, status, error) {
-                showResults(error);
-            }
-            });
-        },
-
-        getFeatureInfoWholeDay: function (evt) {
-            var date_js = $('#datetimepicker').datetimepicker('getValue');
-            var data_chart = {
-                labels: ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-                series: []
-            };
-
-            var vals = [];
-
-            for (i = 7; i <= 18; i++) {
-                date_js.setHours(i);
-                date_js.setMinutes(0);
-                date_js.setSeconds(0);
-
-                date_str = date_js.yyyymmdd();
-                //alert(date_str);
-
-                var url = this.getFeatureInfoUrl(evt.latlng, date_str);
-                //var showResults = L.Util.bind(this.showGetFeatureInfo, this);
-                var val;
-
-                $.ajax({
-                    url: url,
-                    async: false,
-                    success: function (data, status, xhr) {
-                        if (typeof data === 'string') {
-                            vals.push(0);
-                        } else {
-                            val = data.features[0].properties.UV_INDEX;
-                            val = Math.round(val * 100) / 100;
-                            vals.push(val);
-                        }
-                        //showResults(err, evt.latlng, data);
-                    },
-                    error: function (xhr, status, error) {
-                        //showResults(error);
-                        val = 0;
-                        vals.push(val);
-                    }
-                });
-            };
-
-            data_chart.series.push(vals);
-            new Chartist.Line('.ct-chart', data_chart);
-        },
-        
-        getFeatureInfoUrl: function (latlng, datetime) {
-            // Construct a GetFeatureInfo request URL given a point
-            var point = this._map.latLngToContainerPoint(latlng, this._map.getZoom()),
-                size = this._map.getSize(),
-                
-                params = {
-                    request: 'GetFeatureInfo',
-                    service: 'WMS',
-                    srs: 'EPSG:4326',
-                    styles: this.wmsParams.styles,
-                    transparent: this.wmsParams.transparent,
-                    version: this.wmsParams.version,      
-                    format: this.wmsParams.format,
-                    bbox: this._map.getBounds().toBBoxString(),
-                    height: size.y,
-                    width: size.x,
-                    layers: this.wmsParams.layers,
-                    query_layers: this.wmsParams.layers,
-                    info_format: 'application/json',
-                    time: datetime
-                };
-            
-            params[params.version === '1.3.0' ? 'i' : 'x'] = point.x;
-            params[params.version === '1.3.0' ? 'j' : 'y'] = point.y;
-            
-            return this._url + L.Util.getParamString(params, this._url, true);
-        },
-        
-        showGetFeatureInfo: function (err, latlng, content) {
-            var val = content.features[0].properties.UV_INDEX;
-            val = Math.round(val * 100) / 100;
-            alert(val);
-
-            if (err) { console.log(err); return; } // do nothing if there's an error
-            
-            // Otherwise show the content in a popup, or something.
-            L.popup({ maxWidth: 800})
-            .setLatLng(latlng)
-            .setContent(content)
-            .openOn(this._map);
-        }
-        });
-
-        L.tileLayer.betterWms = function (url, options) {
-            return new L.TileLayer.BetterWMS(url, options);  
-        };
-        ///////////////////////////////////////////////////////////////////////////
-
-        var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'Map data &copy; OpenStreetMap contributors'
-        });
-
-        var mapbox_light = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWxleHpoZGFub3YiLCJhIjoiY2pjM3Q1NzMwMHF6YTJxbXgwYjB6aHZmdiJ9.KOCowZCJOVOCsijSlcynKQ', {
-            id: 'mapbox.light',
-            attribution: '© <a href="https://www.mapbox.com/">Mapbox</a>'
-        });
-
-        var uvi_layer = L.tileLayer.betterWms('http://18.194.35.104:8080/geoserver/uv-moscow/wms?', {
-            layers: 'uvindex-datastore, uv-moscow:uvindex-datastore',
-            version: '1.1.1',
-            format: 'image/png',
-            transparent: 'true',
-            opacity: 0.7,
-            attribution: 'uv-moscow.com',
-            time: getYesterdayDateWMS()
-        });
-
-        var uvi_res_layer = L.tileLayer.betterWms('http://18.194.35.104:8080/geoserver/uv-moscow/wms?', {
-            layers: 'uvres-datastore, uv-moscow:uvres-datastore',
-            version: '1.1.1',
-            format: 'image/png',
-            transparent: 'true',
-            opacity: 0.7,
-            attribution: 'uv-moscow.com',
-            time: getYesterdayDateWMS()
-        });
-
-        var qer_layer = L.tileLayer.betterWms('http://18.194.35.104:8080/geoserver/uv-moscow/wms?', {
-            layers: 'qer-datastore, uv-moscow:qer-datastore',
-            version: '1.1.1',
-            format: 'image/png',
-            transparent: 'true',
-            opacity: 0.7,
-            attribution: 'uv-moscow.com',
-            time: getYesterdayDateWMS()
-        });
-
-        var map = L.map('map');
-
-        map.setMaxBounds([
-            [56.85, 40.18],
-            [54.12, 35.13]
-        ]);
-
-        map.setView([55.75, 37.61], 9);
-
-        //map.setMinZoom(map.getBoundsZoom(map.options.maxBounds));
-
-        mapbox_light.addTo(map);
-
-        // UVI LAYER
-        // var uvi_source = L.WMS.source('http://127.0.0.1:8080/geoserver/uv-moscow/wms', {
-        //     'transparent': false,
-        //     'opacity': 0.7,
-        //     'time' : '2018-04-07'
-        // });
-
-        // var uvi_layer = uvi_source.getLayer('uv-moscow-datastore, uv-moscow:uv-moscow-datastore');
-        
-        //uvi_res_layer.addTo(map);
-        uvi_layer.addTo(map);
-        
-        var baselayers = {
-            "Mapbox": mapbox_light
-        };
-
-        var overlays = {
-            "УФ индекс" : uvi_layer,
-            "УФ ресурсы" : uvi_res_layer,
-            "Qer" : qer_layer
-        };
-
-        var control = L.control.layers(overlays, null, { collapsed: false });
-        control.addTo(map);
-
-        jQuery('#datetimepicker').datetimepicker({
-            onChangeDateTime: function(dp,$input){
-                var selectedDate = $input.val();
-                uvi_layer.setParams({ 'time': selectedDate }, false);
-                uvi_res_layer.setParams({ 'time': selectedDate }, false);
-                qer_layer.setParams({ 'time': selectedDate }, false);
-            }
-        });
-
-        var sidebar = L.control.sidebar('sidebar').addTo(map);
-        sidebar.open('home');
-
-        var htmlObject = control.getContainer();
-        var a = document.getElementById('custom-layer-control');
-
-        function setParent(el, newParent)
-        {
-            newParent.appendChild(el);
-        }
-        setParent(htmlObject, a);
+        <script>
 
 
-        function getColor(d) {
-            return d > 6 ? '#d53e4f' :
-                d > 5  ? '#fc8d59' :
-                d > 4  ? '#fee08b' :
-                d > 3  ? '#ffffbf' :
-                d > 2  ? '#e6f598' :
-                d > 1  ? '#99d594' :
-                         '#3288bd';
-        }
+        </script>
 
-        var legend = L.control({position: 'bottomright'});
-
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 1, 2, 3, 4, 5, 6],
-                labels = [];
-
-                for (var i = 0; i < grades.length; i++) {
-                    div.innerHTML +=
-                        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-                }
-
-                return div;
-        };
-
-        legend.addTo(map);
-
-
-    </script>
-</body>
-
+    </body>
 </html>

@@ -15,12 +15,8 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
     },
     
     getFeatureInfo: function (evt) {
-      // Make an AJAX request to the server and hope for the best
-      var date_js = $('#input').datetimepicker('getValue');
-      date_str = date_js.yyyymmdd();
-
-      var url = this.getFeatureInfoUrl(evt.latlng, date_str),
-          showResults = L.Util.bind(this.showGetFeatureInfo, this);
+      var url = this.getFeatureInfoUrl(evt.latlng);
+      var showResults = L.Util.bind(this.showGetFeatureInfo, this);
 
       $.ajax({
         url: url,
@@ -34,7 +30,7 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
       });
     },
     
-    getFeatureInfoUrl: function (latlng, datetime) {
+    getFeatureInfoUrl: function (latlng) {
       // Construct a GetFeatureInfo request URL given a point
       var point = this._map.latLngToContainerPoint(latlng, this._map.getZoom()),
           size = this._map.getSize(),
@@ -53,7 +49,7 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
             layers: this.wmsParams.layers,
             query_layers: this.wmsParams.layers,
             info_format: 'text/html',
-            time: datetime
+            time: this.wmsParams.time
           };
       
       params[params.version === '1.3.0' ? 'i' : 'x'] = point.x;
