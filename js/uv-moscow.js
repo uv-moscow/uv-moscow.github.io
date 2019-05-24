@@ -128,6 +128,12 @@ function getQerHtml()
     return '<i style="background:#d73027"></i> 0–100<br><i style="background:#f46d43"></i> 100–200<br><i style="background:#fdae61"></i> 200–300<br><i style="background:#fee090"></i> 300–400<br><i style="background:#e0f3f8"></i> 400–500<br><i style="background:#abd9e9"></i> 500–600<br><i style="background:#74add1"></i> 600–700<br><i style="background:#4575b4"></i> 700';
 };
 
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,])[1]
+    );
+}
+
 // map creation
 function createMap(div, dtId) {
     // create leaflet map
@@ -140,6 +146,7 @@ function createMap(div, dtId) {
     ]);
 
     map.setView([55.75, 37.61], 9);
+    map.setMaxZoom(11);
 
     // add sidebar to map
     var sidebar = L.control.sidebar('sidebar').addTo(map);
@@ -209,7 +216,7 @@ function createMap(div, dtId) {
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
         div.innerHTML = getUvindexHtml();
-        
+
         return div;
     };
 
@@ -240,6 +247,17 @@ function createMap(div, dtId) {
     
         legend.addTo(map);
     });
+
+    // Leaflet.Geosearch
+    var regionParameter = getURLParameter('region');
+    var region = (regionParameter === 'undefined') ? '' : regionParameter;
+    
+    new L.Control.GeoSearch({
+            provider: new L.GeoSearch.Provider.OpenStreetMap({
+            region: region
+        })
+    }).addTo(map);
+    
 
     // bind dt change event to switch layers time parameter
     jQuery(dtId).datetimepicker({
