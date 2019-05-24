@@ -249,14 +249,14 @@ function createMap(div, dtId) {
     });
 
     // Leaflet.Geosearch
-    var regionParameter = getURLParameter('region');
-    var region = (regionParameter === 'undefined') ? '' : regionParameter;
+    // var regionParameter = getURLParameter('region');
+    // var region = (regionParameter === 'undefined') ? '' : regionParameter;
     
-    new L.Control.GeoSearch({
-            provider: new L.GeoSearch.Provider.OpenStreetMap({
-            region: region
-        })
-    }).addTo(map);
+    // new L.Control.GeoSearch({
+    //         provider: new L.GeoSearch.Provider.OpenStreetMap({
+    //         region: region
+    //     })
+    // }).addTo(map);
     
 
     // bind dt change event to switch layers time parameter
