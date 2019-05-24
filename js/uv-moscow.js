@@ -65,7 +65,7 @@ function createDtPicker(id) {
         startDate: getLastAvailableDatetime(),
         mask: true,
         inline: true,
-        daysOfWeekStart: 1
+        dayOfWeekStart: 1
     }) ;
 
     jQuery.datetimepicker.setLocale('ru');
