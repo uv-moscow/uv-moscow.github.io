@@ -162,7 +162,7 @@ function createMap(div, dtId) {
 
     // WMS layers
     // UV index layer
-    var uvindexLayer = L.tileLayer.betterWms('https://3.120.5.41:8443/geoserver/uv-moscow/wms?', {
+    var uvindexLayer = L.tileLayer.betterWms('https://3-120-5-41.sslip.io:8443/geoserver/uv-moscow/wms?', {
         name: 'uvindex',
         layers: 'uvindex-datastore, uv-moscow:uvindex-datastore',
         version: '1.1.1',
@@ -176,7 +176,7 @@ function createMap(div, dtId) {
     uvindexLayer.addTo(map);
 
     // UV resources layer
-    var uvresLayer = L.tileLayer.betterWms('https://3.120.5.41:8443/geoserver/uv-moscow/wms?', {
+    var uvresLayer = L.tileLayer.betterWms('https://3-120-5-41.sslip.io/geoserver/uv-moscow/wms?', {
         name: 'uvres',
         layers: 'uvres-datastore, uv-moscow:uvres-datastore',
         version: '1.1.1',
@@ -188,7 +188,7 @@ function createMap(div, dtId) {
     });
 
     // QER layer
-    var qerLayer = L.tileLayer.betterWms('https://3.120.5.41:8443/geoserver/uv-moscow/wms?', {
+    var qerLayer = L.tileLayer.betterWms('https://3-120-5-41.sslip.io/geoserver/uv-moscow/wms?', {
         name: 'qer',
         layers: 'qer-datastore, uv-moscow:qer-datastore',
         version: '1.1.1',
